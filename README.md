@@ -4,6 +4,8 @@
 
 A lightweight notes app built for students — _write it before you forget_
 
+![image alt](https://github.com/rumanfatima69/scribble-notes/blob/0f9e8a214e816bcfb34058b4cbdd9787399067a2/Notes%20Main%20image.png)
+
 **Why Scribble?**
 
 Most note-taking apps are built for professionals — too complex, too cluttered, too slow to open when a lecturer is already three slides ahead.
