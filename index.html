@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Write It Before You Forget It</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    background: #f5f5f5;
+    color: #222;
+  }
+  html, body { height: 100%; overflow: hidden; }
+  .app {
+    max-width: 1300px;
+    margin: 20px auto;
+    background: #f6d9cf;
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 40px);
+  }
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,700;1,700&family=Montserrat:wght@400;900&display=swap');
+  header {
+    text-align: center;
+    padding: 28px 10px 18px;
+    position: relative;
+  }
+  .header-title {
+    display: inline-block;
+    position: relative;
+    letter-spacing: 0;
+  }
+  .header-title .line1 {
+    display: block;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900;
+    font-size: 11px;
+    letter-spacing: 8px;
+    text-transform: uppercase;
+    color: #b03a2e;
+    margin-bottom: 2px;
+  }
+  .header-title .line2 {
+    display: block;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-weight: 700;
+    font-size: 42px;
+    color: #3a1a12;
+    line-height: 1;
+    letter-spacing: -1px;
+  }
+  .header-title .line3 {
+    display: block;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 400;
+    font-size: 10px;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    color: #5a2e22;
+    margin-top: 4px;
+    opacity: 0.55;
+  }
+  .header-title .rule {
+    display: block;
+    width: 60px;
+    height: 2px;
+    background: #b03a2e;
+    margin: 6px auto 0;
+    border-radius: 1px;
+  }
+  .body-row {
+    display: flex;
+    padding: 0 24px 24px;
+    gap: 0;
+    position: relative;
+    flex: 1;
+    overflow: hidden;
+  }
+
+  /* LEFT SIDEBAR */
+  .sidebar {
+    width: 150px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-right: 10px;
+    flex-shrink: 0;
+    overflow: visible;
+    position: relative;
+    z-index: 10;
+  }
+  .sidebar h3 {
+    font-size: 11.5px;
+    letter-spacing: .2px;
+    margin-bottom: 6px;
+    white-space: nowrap;
+  }
+  .row-flex {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .add-note-box, .saved-box {
+    background: #fdf4f1;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+    color: #b03a2e;
+    margin-left: 6px;
+    vertical-align: middle;
+  }
+
+  .tool-icons {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-top: 10px;
+  }
+  .tool-icons .icon {
+    font-size: 22px;
+    cursor: pointer;
+    width: 28px;
+  }
+  .tool-icons .icon:hover { opacity: 0.7; }
+
+  .canvas-mode-btn {
+    border: 1px solid #e8c9bd;
+    background: #fdf4f1;
+    border-radius: 20px;
+    padding: 4px 10px;
+    font-size: 11px;
+    cursor: pointer;
+    font-weight: 600;
+    color: #5a2e22;
+    text-align: left;
+  }
+  .canvas-mode-btn.active {
+    background: #b03a2e;
+    color: #fff;
+    border-color: #b03a2e;
+  }
+
+  .time-date {
+    margin-top: auto;
+    font-size: 14px;
+    font-weight: 600;
+  }
+  .time-date-box {
+    background: #fdf4f1;
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-size: 11px;
+    min-height: 14px;
+    width: fit-content;
+  }
+  .time-date-box .time { font-weight: 700; font-size: 12px; }
+
+  /* MAIN AREA */
+  .main-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    overflow: hidden;
+  }
+  #titleInput {
+    border: 1px solid #e8c9bd;
+    border-radius: 6px;
+    background: #fdf6f3;
+    padding: 14px 18px;
+    font-size: 15px;
+    outline: none;
+    width: 100%;
+    margin-bottom: 10px;
+    flex-shrink: 0;
+  }
+  .canvas-wrap {
+    position: relative;
+    flex: 1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  #canvas {
+    background: #fdf6f3;
+    border: 1px solid #e8c9bd;
+    border-radius: 6px;
+    flex: 1;
+    padding: 22px;
+    font-size: 19px;
+    outline: none;
+    line-height: 1.8;
+    position: relative;
+    overflow-y: auto;
+  }
+  #canvas.lined {
+    background-image: repeating-linear-gradient(
+      to bottom,
+      transparent,
+      transparent calc(1.8em - 1px),
+      #e0cdc6 calc(1.8em - 1px),
+      #e0cdc6 1.8em
+    );
+    background-attachment: local;
+    background-origin: content-box;
+    padding-top: calc(1.8em - 1px);
+    line-height: 1.8em;
+  }
+  .save-btn {
+    position: absolute;
+    bottom: 16px;
+    right: 16px;
+    background: #b03a2e;
+    color: #fff;
+    border: none;
+    padding: 9px 26px;
+    border-radius: 4px;
+    font-weight: 700;
+    letter-spacing: .5px;
+    cursor: pointer;
+    z-index: 10;
+  }
+  .save-btn:hover { background: #922b21; }
+
+  /* RIGHT PANEL */
+  .right-panel {
+    width: 90px;
+    padding-left: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    flex-shrink: 0;
+    overflow: hidden;
+  }
+  .right-panel h4 { font-size: 11px; letter-spacing: .5px; margin-bottom: 10px; }
+  .colors, .highlights { display: flex; flex-direction: column; gap: 10px; align-items: center; }
+  .color-dot {
+    width: 22px; height: 22px; border-radius: 50%; cursor: pointer; border: 2px solid transparent;
+  }
+  .color-dot.selected { border-color: #333; }
+  .highlight-bar {
+    height: 14px; width: 100%; border-radius: 3px; cursor: pointer;
+    border: 2px solid transparent;
+    position: relative;
+    transition: border-color 0.2s;
+  }
+  .highlight-bar.selected {
+    border-color: #333;
+  }
+
+  /* SAVED LIST DROPDOWN */
+  .saved-list-popover {
+    position: absolute;
+    background: #fff;
+    border-radius: 6px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+    padding: 8px;
+    width: 200px;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 30;
+    display: none;
+  }
+  .saved-list-popover.open { display: block; }
+  .note-item {
+    display: flex; justify-content: space-between; align-items: center;
+    background: #fdf4f1; border-radius: 5px; padding: 5px 8px; font-size: 11px; margin-bottom: 5px; cursor: pointer;
+  }
+  .note-item:hover { background: #ffe9e1; }
+  .note-item .title { font-weight: 600; max-width: 110px; overflow:hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .note-item button.del { border: none; background: none; color: #c0392b; font-size: 13px; cursor: pointer; }
+
+  .popover {
+    position: absolute;
+    left: 36px;
+    top: -4px;
+    background: #fff;
+    border-radius: 8px;
+    padding: 8px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+    display: none;
+    z-index: 30;
+    width: 150px;
+  }
+  .popover.open { display: block; }
+  .popover .row { display:flex; gap:6px; flex-wrap:wrap; }
+  .popover .row span, .popover .row button {
+    border: none;
+    background: #f5ece8;
+    border-radius: 6px;
+    width: 28px;
+    height: 28px;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  .popover .row button.active, .popover .row span:hover, .popover .row button:hover { background: #f3a98c; color: #fff; }
+  /* Fix browser grey text selection - use custom highlight color */
+  #canvas::selection {
+    background: var(--selection-color, #b5d5ff);
+  }
+  #canvas *::selection {
+    background: var(--selection-color, #b5d5ff);
+  }
+  /* Canvas placeholder */
+  #canvas[data-placeholder]:empty::before {
+    content: attr(data-placeholder);
+    color: #c9a99a;
+    pointer-events: none;
+    font-size: 15px;
+  }
+  .icon-wrap { position: relative; }
+  .sticker-on-canvas {
+    position: absolute;
+    font-size: 28px;
+    cursor: grab;
+    user-select: none;
+    z-index: 20;
+    line-height: 1;
+  }
+  .sticker-on-canvas:active { cursor: grabbing; }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <header>
+    <div class="header-title">
+      <span class="line1">— a note to self —</span>
+      <span class="line2">Write it Before You Forget it</span>
+      <span class="line3">your personal notes space</span>
+      <span class="rule"></span>
+    </div>
+  </header>
+  <div class="body-row">
+
+    <!-- LEFT SIDEBAR -->
+    <div class="sidebar">
+      <div class="row-flex">
+        <h3>ADD NOTES <span class="add-note-box" id="newNoteBtn" style="cursor:pointer; display:inline-flex;">+</span></h3>
+      </div>
+
+      <div class="icon-wrap">
+        <h3>SAVED NOTES <span class="saved-box" id="savedBoxBtn" style="cursor:pointer; display:inline-flex;"><span id="savedCount" style="font-size:10px; font-weight:600;">0</span></span></h3>
+        <div class="saved-list-popover" id="savedListPopover"></div>
+      </div>
+
+      <!-- Plain/Lined right below Saved Notes -->
+      <div style="display:flex; flex-direction:column; gap:5px; margin-top:2px;">
+        <button id="plainBtn" class="canvas-mode-btn active">PLAN</button>
+        <button id="linedBtn" class="canvas-mode-btn">LINE</button>
+      </div>
+
+      <div class="tool-icons">
+        <div class="icon-wrap">
+          <span class="icon" id="stickerIconBtn">◉</span>
+          <div class="popover" id="stickerPopover">
+            <div class="row" id="stickerRow">
+              <span>⭐</span><span>❤️</span><span>✅</span>
+              <span>🔥</span><span>📌</span><span>💡</span>
+              <span>🎯</span><span>🌈</span><span>🦋</span><span>🍀</span>
+            </div>
+          </div>
+        </div>
+        <div class="icon-wrap">
+          <span class="icon" id="drawIconBtn">✎</span>
+          <div class="popover" id="drawPopover">
+            <div class="row" id="drawRow">
+              <button data-tool="pencil">✏️</button>
+              <button data-tool="marker">🖊️</button>
+              <button data-tool="crayon">🖍️</button>
+            </div>
+          </div>
+        </div>
+        <div class="icon-wrap">
+          <span class="icon" id="styleIconBtn">✒</span>
+          <div class="popover" id="stylePopover">
+            <div class="row">
+              <button id="boldBtn"><b>B</b></button>
+              <button id="italicBtn"><i>I</i></button>
+              <button id="underlineBtn"><u>U</u></button>
+            </div>
+          </div>
+        </div>
+        <span class="icon" id="eraseBtn">⌫</span>
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:4px; margin-top:auto;">
+        <div style="font-size:12px; font-weight:600;">Time &amp; Date</div>
+        <div class="time-date-box" id="timeDate"></div>
+      </div>
+    </div>
+
+    <!-- MAIN -->
+    <div class="main-area">
+      <input type="text" id="titleInput" placeholder="Add title:">
+      <div class="canvas-wrap">
+        <div id="canvas" contenteditable="true" data-placeholder="Start Organizing your notes........."></div>
+        <button class="save-btn" id="saveBtn">SAVE</button>
+      </div>
+    </div>
+
+    <!-- RIGHT PANEL -->
+    <div class="right-panel">
+      <div>
+        <h4>COLORS</h4>
+        <div class="colors" id="colors">
+          <div class="color-dot" style="background:#e74c3c" data-color="#e74c3c"></div>
+          <div class="color-dot" style="background:#000" data-color="#000000"></div>
+          <div class="color-dot" style="background:#3498db" data-color="#3498db"></div>
+          <div class="color-dot" style="background:#9b59b6" data-color="#9b59b6"></div>
+          <div class="color-dot" style="background:#27ae60" data-color="#27ae60"></div>
+          <div class="color-dot" style="background:#d63ecf" data-color="#d63ecf"></div>
+        </div>
+      </div>
+      <div>
+        <h4>HIGHLIGHT</h4>
+        <div class="highlights" id="highlights">
+          <div class="highlight-bar" style="background:#f5d76e" data-color="#f5d76e"></div>
+          <div class="highlight-bar" style="background:#f0a35f" data-color="#f0a35f"></div>
+          <div class="highlight-bar" style="background:#f3a6c9" data-color="#f3a6c9"></div>
+          <div class="highlight-bar" style="background:#a8e6b8" data-color="#a8e6b8"></div>
+          <div class="highlight-bar" style="background:#9ec9f5" data-color="#9ec9f5"></div>
+        </div>
+        <button id="removeHighlightBtn" title="Select text then click to remove highlight" style="
+          margin-top: 10px;
+          width: 100%;
+          border: 1.5px dashed #b03a2e;
+          background: transparent;
+          border-radius: 4px;
+          padding: 4px 4px;
+          font-size: 9px;
+          font-weight: 700;
+          color: #b03a2e;
+          cursor: pointer;
+          letter-spacing: 0.3px;
+          line-height: 1.3;
+          text-align: center;
+        ">🚫<br>Clear<br>Highlight</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  const canvas = document.getElementById('canvas');
+  const canvasWrap = document.querySelector('.canvas-wrap');
+  const titleInput = document.getElementById('titleInput');
+  const savedListPopover = document.getElementById('savedListPopover');
+  let notes = JSON.parse(localStorage.getItem('wibyfn_notes') || '[]');
+  let currentNoteId = null;
+
+  function persistNotes(){
+    localStorage.setItem('wibyfn_notes', JSON.stringify(notes));
+  }
+
+  // ---------- Popovers ----------
+  function setupPopover(btnId, popoverId){
+    const btn = document.getElementById(btnId);
+    const pop = document.getElementById(popoverId);
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isOpen = pop.classList.contains('open');
+      document.querySelectorAll('.popover, .saved-list-popover').forEach(p => p.classList.remove('open'));
+      if(!isOpen) pop.classList.add('open');
+    });
+  }
+  setupPopover('stickerIconBtn', 'stickerPopover');
+  setupPopover('drawIconBtn', 'drawPopover');
+  setupPopover('styleIconBtn', 'stylePopover');
+
+  document.getElementById('savedBoxBtn').addEventListener('click', (e) => {
+    e.stopPropagation();
+    const isOpen = savedListPopover.classList.contains('open');
+    document.querySelectorAll('.popover, .saved-list-popover').forEach(p => p.classList.remove('open'));
+    if(!isOpen){ renderSavedList(); savedListPopover.classList.add('open'); }
+  });
+
+  document.addEventListener('click', () => {
+    document.querySelectorAll('.popover, .saved-list-popover').forEach(p => p.classList.remove('open'));
+    // Search bar reset karo jab popover band ho
+    savedListPopover.innerHTML = '';
+  });
+
+  // ---------- Time & Date ----------
+  function updateTimeDate(){
+    const now = new Date();
+    const time = now.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+    const date = now.toLocaleDateString([], {day:'2-digit', month:'short', year:'numeric'});
+    document.getElementById('timeDate').innerHTML = `<div class="time">${time}</div><div>${date}</div>`;
+  }
+  updateTimeDate();
+  setInterval(updateTimeDate, 1000*30);
+
+  // ---------- Saved notes ----------
+  function renderSavedList(query = ''){
+    document.getElementById('savedCount').textContent = notes.length;
+
+    // Search bar — sirf pehli baar banao
+    if(!savedListPopover.querySelector('#noteSearch')){
+      const searchWrap = document.createElement('div');
+      searchWrap.style.cssText = 'display:flex; align-items:center; gap:5px; margin-bottom:8px; background:#fff; border:1px solid #e8c9bd; border-radius:6px; padding:4px 8px;';
+      searchWrap.innerHTML = `<span style="font-size:12px; color:#b03a2e;">🔍</span><input id="noteSearch" type="text" placeholder="Search notes..." style="border:none; outline:none; font-size:11px; width:100%; background:transparent; color:#3a1a12;" />`;
+      savedListPopover.appendChild(searchWrap);
+
+      searchWrap.querySelector('#noteSearch').addEventListener('input', (e) => {
+        e.stopPropagation();
+        renderNoteItems(e.target.value);
+      });
+      searchWrap.querySelector('#noteSearch').addEventListener('click', (e) => e.stopPropagation());
+    }
+
+    renderNoteItems(query);
+  }
+
+  function renderNoteItems(query = ''){
+    // Sirf note items remove karo, search bar nahi
+    savedListPopover.querySelectorAll('.note-item, .no-notes').forEach(el => el.remove());
+
+    const filtered = notes.filter(n =>
+      (n.title || '').toLowerCase().includes(query.toLowerCase()) ||
+      (n.text || '').replace(/<[^>]+>/g,'').toLowerCase().includes(query.toLowerCase())
+    );
+
+    if(filtered.length === 0){
+      const empty = document.createElement('div');
+      empty.className = 'no-notes';
+      empty.style.cssText = 'color:#999; font-size:11px; padding:4px 0;';
+      empty.textContent = query ? 'No matching notes' : 'No saved notes yet';
+      savedListPopover.appendChild(empty);
+      return;
+    }
+
+    filtered.slice().reverse().forEach(note => {
+      const div = document.createElement('div');
+      div.className = 'note-item';
+      const safeTitle = (note.title && note.title.trim()) ? note.title : 'Untitled';
+      div.innerHTML = `
+        <span class="title">${safeTitle}</span>
+        <span>${note.date}</span>
+        <button class="del" data-id="${note.id}">✕</button>
+      `;
+      div.addEventListener('click', (e) => {
+        if(e.target.classList.contains('del')) return;
+        loadNote(note.id);
+        savedListPopover.classList.remove('open');
+      });
+      div.querySelector('.del').addEventListener('click', (e) => {
+        e.stopPropagation();
+        deleteNote(note.id);
+      });
+      savedListPopover.appendChild(div);
+    });
+  }
+
+  function loadNote(id){
+    const note = notes.find(n => n.id === id);
+    if(!note) return;
+    canvas.innerHTML = note.text || '';
+    titleInput.value = note.title || '';
+    document.querySelectorAll('.sticker-on-canvas').forEach(s => s.remove());
+    (note.stickers || []).forEach(s => addStickerToCanvas(s.emoji, s.x, s.y));
+    currentNoteId = id;
+  }
+
+  function deleteNote(id){
+    notes = notes.filter(n => n.id !== id);
+    if(currentNoteId === id){
+      canvas.innerHTML = '';
+      titleInput.value = '';
+      document.querySelectorAll('.sticker-on-canvas').forEach(s => s.remove());
+      currentNoteId = null;
+    }
+    renderSavedList();
+    persistNotes();
+  }
+
+  document.getElementById('newNoteBtn').addEventListener('click', () => {
+    canvas.innerHTML = '';
+    titleInput.value = '';
+    document.querySelectorAll('.sticker-on-canvas').forEach(s => s.remove());
+    currentNoteId = null;
+    canvas.focus();
+  });
+
+  // ---------- Save ----------
+  document.getElementById('saveBtn').addEventListener('click', () => {
+    const text = canvas.innerText.trim();
+    if(!text && document.querySelectorAll('.sticker-on-canvas').length === 0){
+      alert('Write something or add a sticker before saving!');
+      return;
+    }
+    const title = titleInput.value.trim() || text.split('\n')[0].slice(0, 30) || 'Untitled';
+    const now = new Date();
+    const dateStr = now.toLocaleDateString([], {day:'2-digit', month:'short'});
+    const stickers = Array.from(document.querySelectorAll('.sticker-on-canvas')).map(s => ({
+      emoji: s.dataset.emoji, x: s.style.left, y: s.style.top
+    }));
+
+    if(currentNoteId){
+      const note = notes.find(n => n.id === currentNoteId);
+      note.title = title;
+      note.text = canvas.innerHTML;
+      note.date = dateStr;
+      note.stickers = stickers;
+    } else {
+      const id = Date.now().toString();
+      notes.push({ id, title, text: canvas.innerHTML, date: dateStr, stickers });
+      currentNoteId = id;
+    }
+    renderSavedList();
+    persistNotes();
+  });
+
+  // ---------- Style ----------
+  // Prevent buttons from stealing focus/selection away from canvas before click fires
+  // Using pointerdown (works for both mouse AND touch/mobile) instead of mousedown
+  document.querySelectorAll('.popover button, .popover span').forEach(el => {
+    el.addEventListener('pointerdown', (e) => e.preventDefault());
+    el.addEventListener('touchstart', (e) => e.preventDefault(), { passive: false });
+  });
+
+  function applyStyle(command){
+    canvas.focus();
+    restoreSelection();
+    document.execCommand(command, false, null);
+    saveCurrentSelection();
+  }
+
+  document.getElementById('boldBtn').addEventListener('click', () => applyStyle('bold'));
+  document.getElementById('italicBtn').addEventListener('click', () => applyStyle('italic'));
+  document.getElementById('underlineBtn').addEventListener('click', () => applyStyle('underline'));
+  document.getElementById('eraseBtn').addEventListener('click', () => {
+    if(confirm('Clear the whole canvas?')){
+      canvas.innerHTML = '';
+      document.querySelectorAll('.sticker-on-canvas').forEach(s => s.remove());
+    }
+  });
+
+  // ---------- Stickers: click to drop, then drag anywhere, double click to remove ----------
+  function addStickerToCanvas(emoji, x, y){
+    const el = document.createElement('div');
+    el.className = 'sticker-on-canvas';
+    el.textContent = emoji;
+    el.dataset.emoji = emoji;
+    el.style.left = x;
+    el.style.top = y;
+    el.title = 'Double click to remove';
+    canvasWrap.appendChild(el);
+    makeDraggable(el);
+    el.addEventListener('dblclick', (e) => {
+      e.stopPropagation();
+      el.remove();
+    });
+  }
+
+  function makeDraggable(el){
+    let offsetX, offsetY, dragging = false;
+
+    el.addEventListener('pointerdown', (e) => {
+      dragging = true;
+      el.setPointerCapture(e.pointerId);
+      const rect = el.getBoundingClientRect();
+      offsetX = e.clientX - rect.left;
+      offsetY = e.clientY - rect.top;
+      el.style.cursor = 'grabbing';
+      e.preventDefault();
+      e.stopPropagation();
+    });
+
+    el.addEventListener('pointermove', (e) => {
+      if(!dragging) return;
+      const wrapRect = canvasWrap.getBoundingClientRect();
+      let x = e.clientX - wrapRect.left - offsetX;
+      let y = e.clientY - wrapRect.top - offsetY;
+      x = Math.max(0, Math.min(x, wrapRect.width - 36));
+      y = Math.max(0, Math.min(y, wrapRect.height - 36));
+      el.style.left = x + 'px';
+      el.style.top = y + 'px';
+      e.preventDefault();
+    });
+
+    el.addEventListener('pointerup', (e) => {
+      dragging = false;
+      el.style.cursor = 'grab';
+    });
+
+    el.addEventListener('pointercancel', () => {
+      dragging = false;
+      el.style.cursor = 'grab';
+    });
+  }
+
+  document.getElementById('stickerRow').addEventListener('click', (e) => {
+    if(e.target.tagName === 'SPAN'){
+      const wrapRect = canvasWrap.getBoundingClientRect();
+      const x = wrapRect.width/2 - 13 + (Math.random()*60-30);
+      const y = wrapRect.height/2 - 13 + (Math.random()*60-30);
+      addStickerToCanvas(e.target.textContent, x + 'px', y + 'px');
+      document.getElementById('stickerPopover').classList.remove('open');
+    }
+  });
+
+  // ---------- Draw tools ----------
+  const drawStyles = {
+    pencil: { color: '#555', weight: '400', size: '15px' },
+    marker: { color: '#111', weight: '700', size: '18px' },
+    crayon: { color: '#c0392b', weight: '500', size: '20px' }
+  };
+  document.getElementById('drawRow').addEventListener('click', (e) => {
+    const btn = e.target.closest('button');
+    if(!btn) return;
+    document.querySelectorAll('#drawRow button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const style = drawStyles[btn.dataset.tool];
+    canvas.style.color = style.color;
+    canvas.style.fontWeight = style.weight;
+    canvas.style.fontSize = style.size;
+    canvas.focus();
+  });
+
+  // ---------- Persist text selection across touch lift (mobile fix) ----------
+  let savedRange = null;
+  function saveCurrentSelection(){
+    const sel = window.getSelection();
+    if(sel && sel.rangeCount > 0 && canvas.contains(sel.anchorNode)){
+      savedRange = sel.getRangeAt(0).cloneRange();
+    }
+  }
+  document.addEventListener('selectionchange', saveCurrentSelection);
+  canvas.addEventListener('touchend', saveCurrentSelection);
+  canvas.addEventListener('mouseup', saveCurrentSelection);
+
+  function restoreSelection(){
+    if(savedRange){
+      const sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(savedRange);
+    }
+  }
+
+  // ---------- Plain / Lined toggle ----------
+  document.getElementById('plainBtn').addEventListener('click', () => {
+    canvas.classList.remove('lined');
+    document.getElementById('plainBtn').classList.add('active');
+    document.getElementById('linedBtn').classList.remove('active');
+  });
+  document.getElementById('linedBtn').addEventListener('click', () => {
+    canvas.classList.add('lined');
+    document.getElementById('linedBtn').classList.add('active');
+    document.getElementById('plainBtn').classList.remove('active');
+  });
+
+  // ---------- Colors / Highlight ----------
+  document.querySelectorAll('.color-dot, .highlight-bar').forEach(el => {
+    el.addEventListener('pointerdown', (e) => e.preventDefault());
+    el.addEventListener('touchstart', (e) => e.preventDefault(), { passive: false });
+  });
+
+  document.getElementById('colors').addEventListener('click', (e) => {
+    if(e.target.classList.contains('color-dot')){
+      document.querySelectorAll('.color-dot').forEach(d => d.classList.remove('selected'));
+      e.target.classList.add('selected');
+      canvas.focus();
+      restoreSelection();
+      document.execCommand('foreColor', false, e.target.dataset.color);
+      saveCurrentSelection();
+    }
+  });
+  document.getElementById('highlights').addEventListener('click', (e) => {
+    if(e.target.classList.contains('highlight-bar')){
+      const alreadySelected = e.target.classList.contains('selected');
+      document.querySelectorAll('.highlight-bar').forEach(d => {
+        d.classList.remove('selected');
+      });
+      canvas.focus();
+      restoreSelection();
+      if(alreadySelected){
+        // Remove highlight
+        document.execCommand('hiliteColor', false, 'transparent');
+        canvas.style.removeProperty('--selection-color');
+      } else {
+        e.target.classList.add('selected');
+        const color = e.target.dataset.color;
+        // Update text selection color to match highlight
+        canvas.style.setProperty('--selection-color', color);
+        document.execCommand('hiliteColor', false, color);
+      }
+      saveCurrentSelection();
+    }
+  });
+
+  // ---------- Remove Highlight button ----------
+  document.getElementById('removeHighlightBtn').addEventListener('pointerdown', (e) => e.preventDefault());
+  document.getElementById('removeHighlightBtn').addEventListener('click', () => {
+    canvas.focus();
+    restoreSelection();
+    document.execCommand('hiliteColor', false, 'transparent');
+    document.querySelectorAll('.highlight-bar').forEach(d => d.classList.remove('selected'));
+    canvas.style.removeProperty('--selection-color');
+    saveCurrentSelection();
+  });
+
+  renderSavedList();
+</script>
+
+</body>
+</html>
