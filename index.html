@@ -2,7 +2,10 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Write It Before You Forget It</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,700;1,700&family=Montserrat:wght@400;900&display=swap" rel="stylesheet">
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
@@ -22,7 +25,6 @@
     flex-direction: column;
     height: calc(100vh - 40px);
   }
-  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,700;1,700&family=Montserrat:wght@400;900&display=swap');
   header {
     text-align: center;
     padding: 28px 10px 18px;
@@ -328,6 +330,372 @@
     line-height: 1;
   }
   .sticker-on-canvas:active { cursor: grabbing; }
+
+  /* MOBILE REMOVED — desktop only */
+  @media (max-width: 0px) {
+
+    html, body { overflow: hidden; }
+
+    .app {
+      margin: 0;
+      border-radius: 0;
+      height: 100dvh;
+      height: 100vh;
+      max-width: 100%;
+      box-shadow: none;
+    }
+
+    header {
+      padding: 16px 10px 10px;
+      flex-shrink: 0;
+    }
+
+    .header-title .line2 { font-size: 26px; }
+    .header-title .line1 { font-size: 9px; letter-spacing: 5px; }
+    .header-title .line3 { display: none; }
+    .header-title .rule { margin-top: 4px; }
+
+    /* Hide desktop sidebar and right panel */
+    .sidebar { display: none !important; }
+    .right-panel { display: none !important; }
+
+    /* Body row becomes just the main area */
+    .body-row {
+      padding: 0 12px 0;
+      flex: 1;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .main-area {
+      flex: 1;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Title input */
+    #titleInput {
+      margin-bottom: 8px;
+      padding: 10px 14px;
+      font-size: 14px;
+    }
+
+    .canvas-wrap {
+      flex: 1;
+      overflow: hidden;
+    }
+
+    #canvas {
+      font-size: 16px; /* prevents iOS auto-zoom */
+      padding: 14px;
+    }
+
+    /* Save button - move it to be visible above bottom nav */
+    .save-btn {
+      bottom: 10px;
+      right: 10px;
+      padding: 8px 20px;
+      font-size: 13px;
+    }
+
+    /* Mobile: saved notes panel (full screen overlay) */
+    .mobile-saved-panel {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: #f6d9cf;
+      z-index: 100;
+      flex-direction: column;
+    }
+    .mobile-saved-panel.open { display: flex; }
+
+    .mobile-saved-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 18px 12px;
+      border-bottom: 1px solid #e8c9bd;
+    }
+    .mobile-saved-header h2 {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 900;
+      font-size: 13px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: #3a1a12;
+    }
+    .mobile-saved-close {
+      background: none;
+      border: none;
+      font-size: 22px;
+      color: #b03a2e;
+      cursor: pointer;
+      padding: 0 4px;
+    }
+
+    .mobile-saved-search {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 12px 16px;
+      background: #fdf4f1;
+      border: 1px solid #e8c9bd;
+      border-radius: 8px;
+      padding: 8px 12px;
+    }
+    .mobile-saved-search input {
+      border: none;
+      outline: none;
+      background: transparent;
+      font-size: 13px;
+      width: 100%;
+      color: #3a1a12;
+    }
+
+    .mobile-saved-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0 16px 16px;
+    }
+
+    .mobile-note-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #fdf4f1;
+      border-radius: 8px;
+      padding: 12px 14px;
+      margin-bottom: 8px;
+      cursor: pointer;
+    }
+    .mobile-note-item:active { background: #ffe9e1; }
+    .mobile-note-item .m-title {
+      font-weight: 700;
+      font-size: 13px;
+      color: #3a1a12;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 200px;
+    }
+    .mobile-note-item .m-date {
+      font-size: 11px;
+      color: #8a5a50;
+      margin-top: 2px;
+    }
+    .mobile-note-item .m-info { flex: 1; min-width: 0; }
+    .mobile-note-item .m-del {
+      border: none;
+      background: none;
+      color: #c0392b;
+      font-size: 16px;
+      cursor: pointer;
+      padding: 4px 6px;
+      flex-shrink: 0;
+    }
+    .mobile-note-new {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #b03a2e;
+      color: #fff;
+      border-radius: 8px;
+      padding: 12px 14px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: 1px;
+    }
+
+    /* ---- Bottom Navigation Bar ---- */
+    .mobile-bottom-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      background: #fdf4f1;
+      border-top: 1px solid #e8c9bd;
+      padding: 8px 0 max(8px, env(safe-area-inset-bottom));
+      flex-shrink: 0;
+      position: relative;
+      z-index: 50;
+    }
+
+    .mob-nav-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 6px 10px;
+      color: #8a5a50;
+      font-size: 9px;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      border-radius: 10px;
+      transition: color 0.15s;
+    }
+    .mob-nav-btn .nav-icon { font-size: 20px; line-height: 1; }
+    .mob-nav-btn.active { color: #b03a2e; }
+
+    /* ---- Mobile Tool Popovers (rise from bottom nav) ---- */
+    .mob-tool-popup {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0; right: 0;
+      background: #fdf4f1;
+      border-top: 1px solid #e8c9bd;
+      border-radius: 16px 16px 0 0;
+      padding: 16px 20px max(20px, env(safe-area-inset-bottom));
+      z-index: 200;
+      box-shadow: 0 -4px 20px rgba(0,0,0,0.12);
+      animation: slideUp 0.2s ease;
+    }
+    .mob-tool-popup.open { display: block; }
+
+    @keyframes slideUp {
+      from { transform: translateY(30px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .mob-popup-handle {
+      width: 36px;
+      height: 4px;
+      background: #e0cdc6;
+      border-radius: 2px;
+      margin: 0 auto 14px;
+    }
+
+    .mob-popup-title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #5a2e22;
+      margin-bottom: 14px;
+    }
+
+    /* Colors popup */
+    .mob-color-row {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 4px;
+    }
+    .mob-color-dot {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 2.5px solid transparent;
+      transition: transform 0.1s;
+    }
+    .mob-color-dot.selected { border-color: #333; transform: scale(1.15); }
+
+    /* Highlights popup */
+    .mob-highlight-row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .mob-highlight-swatch {
+      width: 44px;
+      height: 22px;
+      border-radius: 4px;
+      cursor: pointer;
+      border: 2.5px solid transparent;
+    }
+    .mob-highlight-swatch.selected { border-color: #333; }
+    .mob-remove-hl {
+      border: 1.5px dashed #b03a2e;
+      background: transparent;
+      border-radius: 6px;
+      padding: 4px 10px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #b03a2e;
+      cursor: pointer;
+      margin-top: 12px;
+      width: 100%;
+    }
+
+    /* Stickers popup */
+    .mob-sticker-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .mob-sticker-grid span {
+      font-size: 28px;
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 6px;
+    }
+    .mob-sticker-grid span:active { background: #f3a98c44; }
+
+    /* Draw popup */
+    .mob-draw-row {
+      display: flex;
+      gap: 12px;
+    }
+    .mob-draw-btn {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      background: #f5ece8;
+      border: none;
+      border-radius: 10px;
+      padding: 12px 6px;
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 600;
+      color: #5a2e22;
+    }
+    .mob-draw-btn span { font-size: 24px; }
+    .mob-draw-btn.active { background: #b03a2e; color: #fff; }
+
+    /* Style popup (B I U) */
+    .mob-style-row {
+      display: flex;
+      gap: 12px;
+    }
+    .mob-style-btn {
+      flex: 1;
+      background: #f5ece8;
+      border: none;
+      border-radius: 10px;
+      padding: 14px;
+      font-size: 18px;
+      cursor: pointer;
+      color: #3a1a12;
+    }
+    .mob-style-btn:active { background: #f3a98c; }
+
+    /* Popup backdrop */
+    .mob-popup-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 190;
+      background: transparent;
+    }
+    .mob-popup-backdrop.open { display: block; }
+
+  }
+
+
 </style>
 </head>
 <body>
@@ -367,7 +735,7 @@
             <div class="row" id="stickerRow">
               <span>⭐</span><span>❤️</span><span>✅</span>
               <span>🔥</span><span>📌</span><span>💡</span>
-              <span>🎯</span><span>🌈</span><span>🦋</span><span>🍀</span>
+              <span>🎯</span><span>🌈</span><span>🦋</span><span>🍀</span><span>😭</span><span>🙀</span>
             </div>
           </div>
         </div>
@@ -449,7 +817,7 @@
       </div>
     </div>
 
-  </div>
+
 </div>
 
 <script>
@@ -603,7 +971,7 @@
     const title = titleInput.value.trim() || text.split('\n')[0].slice(0, 30) || 'Untitled';
     const now = new Date();
     const dateStr = now.toLocaleDateString([], {day:'2-digit', month:'short'});
-    const stickers = Array.from(document.querySelectorAll('.sticker-on-canvas')).map(s => ({
+    const stickers = Array.from(canvas.querySelectorAll('.sticker-on-canvas')).map(s => ({
       emoji: s.dataset.emoji, x: s.style.left, y: s.style.top
     }));
 
@@ -655,8 +1023,8 @@
     el.dataset.emoji = emoji;
     el.style.left = x;
     el.style.top = y;
-    el.title = 'Double click to remove';
-    canvasWrap.appendChild(el);
+    el.title = 'Double-click to remove';
+    canvas.appendChild(el);   // ← attach to #canvas, not canvasWrap
     makeDraggable(el);
     el.addEventListener('dblclick', (e) => {
       e.stopPropagation();
@@ -680,17 +1048,18 @@
 
     el.addEventListener('pointermove', (e) => {
       if(!dragging) return;
-      const wrapRect = canvasWrap.getBoundingClientRect();
-      let x = e.clientX - wrapRect.left - offsetX;
-      let y = e.clientY - wrapRect.top - offsetY;
-      x = Math.max(0, Math.min(x, wrapRect.width - 36));
-      y = Math.max(0, Math.min(y, wrapRect.height - 36));
+      const canvasRect = canvas.getBoundingClientRect();   // ← canvas-relative
+      // account for canvas scroll
+      let x = e.clientX - canvasRect.left - offsetX + canvas.scrollLeft;
+      let y = e.clientY - canvasRect.top  - offsetY + canvas.scrollTop;
+      x = Math.max(0, x);
+      y = Math.max(0, y);
       el.style.left = x + 'px';
-      el.style.top = y + 'px';
+      el.style.top  = y + 'px';
       e.preventDefault();
     });
 
-    el.addEventListener('pointerup', (e) => {
+    el.addEventListener('pointerup', () => {
       dragging = false;
       el.style.cursor = 'grab';
     });
@@ -703,9 +1072,9 @@
 
   document.getElementById('stickerRow').addEventListener('click', (e) => {
     if(e.target.tagName === 'SPAN'){
-      const wrapRect = canvasWrap.getBoundingClientRect();
-      const x = wrapRect.width/2 - 13 + (Math.random()*60-30);
-      const y = wrapRect.height/2 - 13 + (Math.random()*60-30);
+      // Place sticker in the visible centre of the canvas viewport
+      const x = canvas.scrollLeft + canvas.clientWidth  / 2 - 18 + (Math.random()*60-30);
+      const y = canvas.scrollTop  + canvas.clientHeight / 2 - 18 + (Math.random()*60-30);
       addStickerToCanvas(e.target.textContent, x + 'px', y + 'px');
       document.getElementById('stickerPopover').classList.remove('open');
     }
@@ -727,6 +1096,19 @@
     canvas.style.fontWeight = style.weight;
     canvas.style.fontSize = style.size;
     canvas.focus();
+  });
+
+  // ---------- Keyboard Shortcuts ----------
+  document.addEventListener('keydown', (e) => {
+    const isMac = navigator.platform.toUpperCase().includes('MAC');
+    const ctrl = isMac ? e.metaKey : e.ctrlKey;
+    if(!ctrl) return;
+    switch(e.key.toLowerCase()){
+      case 'b': e.preventDefault(); applyStyle('bold'); break;
+      case 'i': e.preventDefault(); applyStyle('italic'); break;
+      case 'u': e.preventDefault(); applyStyle('underline'); break;
+      case 's': e.preventDefault(); document.getElementById('saveBtn').click(); break;
+    }
   });
 
   // ---------- Persist text selection across touch lift (mobile fix) ----------
@@ -769,6 +1151,7 @@
 
   document.getElementById('colors').addEventListener('click', (e) => {
     if(e.target.classList.contains('color-dot')){
+      if(e.target.classList.contains('selected')) return; // already selected, do nothing
       document.querySelectorAll('.color-dot').forEach(d => d.classList.remove('selected'));
       e.target.classList.add('selected');
       canvas.focus();
@@ -779,23 +1162,13 @@
   });
   document.getElementById('highlights').addEventListener('click', (e) => {
     if(e.target.classList.contains('highlight-bar')){
-      const alreadySelected = e.target.classList.contains('selected');
-      document.querySelectorAll('.highlight-bar').forEach(d => {
-        d.classList.remove('selected');
-      });
+      document.querySelectorAll('.highlight-bar').forEach(d => d.classList.remove('selected'));
+      e.target.classList.add('selected');
+      const color = e.target.dataset.color;
       canvas.focus();
       restoreSelection();
-      if(alreadySelected){
-        // Remove highlight
-        document.execCommand('hiliteColor', false, 'transparent');
-        canvas.style.removeProperty('--selection-color');
-      } else {
-        e.target.classList.add('selected');
-        const color = e.target.dataset.color;
-        // Update text selection color to match highlight
-        canvas.style.setProperty('--selection-color', color);
-        document.execCommand('hiliteColor', false, color);
-      }
+      canvas.style.setProperty('--selection-color', color);
+      document.execCommand('hiliteColor', false, color);
       saveCurrentSelection();
     }
   });
@@ -812,6 +1185,7 @@
   });
 
   renderSavedList();
+
 </script>
 
 </body>
